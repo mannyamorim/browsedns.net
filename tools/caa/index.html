@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>CAA Record Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+</head>
+<body>
+    <div class="vertical-center">
+        <div class="container">
+            <h1 class="text-center">CAA Record Analyzer</h1>
+            <p>
+                WARNING THIS SITE IS CURRENTLY IN BETA
+            </p>
+            <p>
+                Enter domain to search: (if your domain does not have CAA yet you can try some test domains, test-{a-f}.caa.cloudns.cc)
+            </p>
+            <form class="form-inline" onsubmit="return search();">
+                <div class="form-group">
+                    <label for="inputDomain">Domain</label>
+                    <input type="text" class="form-control" id="domainInput" placeholder="example.net" />
+                </div>
+                <button type="submit" class="btn btn-primary">Analyze Domain</button>
+                <img id="imgLoading" style="display: none; height: 40px; width: 40px;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCAxMjggMTI4IiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48cGF0aCBkPSJNNzUuNCAxMjYuNjNhMTEuNDMgMTEuNDMgMCAwIDEtMi4xLTIyLjY1IDQwLjkgNDAuOSAwIDAgMCAzMC41LTMwLjYgMTEuNCAxMS40IDAgMSAxIDIyLjI3IDQuODdoLjAyYTYzLjc3IDYzLjc3IDAgMCAxLTQ3LjggNDguMDV2LS4wMmExMS4zOCAxMS4zOCAwIDAgMS0yLjkzLjM3eiIgZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIxIi8+PGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIGZyb209IjAgNjQgNjQiIHRvPSIzNjAgNjQgNjQiIGR1cj0iODAwbXMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9nPjwvc3ZnPg==" />
+                <img id="imgCheckmarkGreen" style="display: none; height: 40px; width: 40px;" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjQwcHgiIHk9IjQwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48cGF0aCBmaWxsPSIjN2FjMTQyIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM5LjM2Myw3OUwxNiw1NS40OWwxMS4zNDctMTEuNDE5TDM5LjY5NCw1Ni40OUw3Mi45ODMsMjNMODQsMzQuMDg1TDM5LjM2Myw3OXoiPjwvcGF0aD48L2c+PC9zdmc+" />
+                <img id="imgCheckmarkOrange" style="display: none; height: 40px; width: 40px;" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjQwcHgiIHk9IjQwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48cGF0aCBmaWxsPSIjYzY2NjAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM5LjM2Myw3OUwxNiw1NS40OWwxMS4zNDctMTEuNDE5TDM5LjY5NCw1Ni40OUw3Mi45ODMsMjNMODQsMzQuMDg1TDM5LjM2Myw3OXoiPjwvcGF0aD48L2c+PC9zdmc+" />
+                <img id="imgRedX" style="display: none; height: 40px; width: 40px;" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTA4MCAxMzUwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDgwIDEwODAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIGZpbGw9IiNhNTAwMDAiIHBvaW50cz0iOTU3LjYyMSw4NzguNTkzIDYxOS4wMjcsNTQwIDk1Ny42MjEsMjAxLjQwNyA4NzguNTk0LDEyMi4zNzkgNTQwLDQ2MC45NzMgMjAxLjQwNiwxMjIuMzc5IDEyMi4zNzksMjAxLjQwNiAgIDQ2MC45NzMsNTQwIDEyMi4zNzksODc4LjU5MyAyMDEuNDA2LDk1Ny42MjEgNTQwLDYxOS4wMjcgODc4LjU5Myw5NTcuNjIxICIvPjwvc3ZnPg==" />
+            </form>
+            <p>
+                CAA Records Found
+            </p>
+            <pre id="recordsFound"></pre>
+            <h4 class="text-center">Certificate Authorities Authorized to Issue Standard Certificates ONLY (example.com, example.net)</h4>
+            <div id="standardCA"></div>
+            <h4 class="text-center">Certificate Authorities Authorized to Issue Wildcard Certificates ONLY (*.example.com, BUT NOT example.com)</h4>
+            <div id="wildcardCA"></div>
+            <h4 class="text-center">Certificate Authorities Authorized to Issue Standard and Wildcard Certificates (example.com and *.example.com)</h4>
+            <div id="bothCA"></div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/psl/1.1.19/psl.min.js" integrity="sha256-VDFnb6KX+SprInx4iRU0Am6ykk11hs7CUNwdr41wk2k=" crossorigin="anonymous"></script>
+            <script src="ca-list.js"></script>
+            <script src="analyzer.js"></script>
+        </div>
+    </div>
+</body>
+</html>

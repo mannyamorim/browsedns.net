@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<title>IP Address Records</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/css/mui.min.css" integrity="sha256-7dX96C+zjjp+ScpiVFwN+HrZmPIIoz2APe2kODye4i8=" crossorigin="anonymous" />
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/js/mui.min.js" integrity="sha256-H08Ajxx+1IyR13mJBF23G5oZeDiqhtHLAmAoODk4p3k=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="/static/script.js"></script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3761671494959891",
+    enable_page_level_ads: true
+  });
+</script>
+  </head>
+  <body>
+    <div id="sidedrawer" class="mui--no-user-select">
+      <div id="sidedrawer-brand" class="mui--appbar-line-height">
+        <span class="mui--text-title">BrowseDNS.net</span>
+      </div>
+      <div class="mui-divider"></div>
+      <ul>
+        <li>
+          <strong>Record Tools</strong>
+          <ul>
+            <li><a href="/tools/caa/index.html">CAA Record Analyzer</a></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Record Info</strong>
+          <ul>
+            <li><a href="/info/ipaddress.html">IP Address Records</a></li>
+            <li><a href="/info/mail.html">Mail Records</a></li>
+            <li><a href="/info/caa.html">CAA Record Info</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <header id="header">
+      <div class="mui-appbar mui--appbar-line-height">
+        <div class="mui-container-fluid">
+          <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+          <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+          <span class="mui--text-title mui--visible-xs-inline-block mui--visible-sm-inline-block">BrowseDNS.net</span>
+        </div>
+      </div>
+    </header>
+    <div id="content-wrapper">
+      <div class="mui--appbar-height"></div>
+      <div class="mui-container-fluid">
+        <br>
+        <h1 class="text-center">IP Address DNS Records</h1>
+            <h2 class="text-center">A Record (IPv4) [<a href="https://tools.ietf.org/html/rfc1035">RFC1035</a>]</h2>
+            <p>
+                A records are one of first record types defined are were given type code 1.
+                A records map a domain name to IPv4 address.
+                The record contains only one address and this is the only field.
+                Hosts that have multiple Internet addresses will have multiple A records.
+                A records cause no additional section processing.
+                IPv4 address are expressed in zone files using the dotted notation (192.0.2.1).
+            </p>
+            <pre>example.com.   IN  A 192.0.2.1</pre>
+            <h2 class="text-center">AAAA Record (IPv6) [<a href="https://tools.ietf.org/html/rfc3596">RFC3596</a>]</h2>
+            <p>
+                AAAA records were defined to map domain names to IPv6 addresses.
+                They were given type code 28.
+                As with A records, AAAA records contain only one address and this is the only field.
+                AAAA records cause no additional section processing.
+                IPv6 address are expressed in zone files using the IPv6 compressed notation (2001:db8::0).
+            </p>
+            <pre>example.com.   IN  AAAA 2001:db8::0</pre>
+            <h2 class="text-center"><b class="text-danger">DEPRECIATED</b> A6 Record (IPv6) [<a href="https://tools.ietf.org/html/rfc2874">RFC2874</a>]</h2>
+            <p>
+                A6 records were defined to map domains to IPv6 addresses.
+                These records were proposed but never made it to production and were replaced by AAAA records.
+                The pros and cons were debated in <a href="https://tools.ietf.org/html/rfc3364">RFC3364</a>.
+                A6 records are not supported and should not be used.
+                This record type is documented here for interests sake.
+            </p>
+            <p>
+                A6 records were given type code 38.
+                A6 differs from AAAA because it stores incomplete IPv6 addresses.
+                A6 records are composed of three parts: a prefix length (unsinged 8bit integer), a complete or partial IPv6 address, and a domain name for use in obtaining the network prefix.
+                A6 records can contain a complete address meaning the prefix length is 0 and there is no domain name.
+                A6 records can also contain a partial address.
+                A partial address for a host would contain the hosts identifier within the subnet (the network or subnet portion would be set to zero and ignored).
+                In a partial address a the prefix length defines how many bits of the network portion are ommitted.
+                The domain name specified is then used to make another query to obtain the network portion.
+                The second query may result in a record with a shorter prefix and a third domain name.
+                The chain can be used build a complete record.
+            </p>
+            <pre>host12.example.com. IN A6 64 ::1234:5678:9ABC:DEF0 subnet31.example.com ;partial address with the interface ID for host12
+subnet31.example.com. IN A6 48 0:0:0:31:: subscriber-example.isp.net ;another partial address with the subnet id for subnet 31
+
+subscriber-example.isp.net IN A6 32 0:0:1234:5678:: isp.ip-registry.net ;partial address showing the isp allocation to the customer
+isp.ip-registry.net IN A6 0 2345:000E:: ;this is the final record with no domain name and a prefix of 0</pre>
+            <p>
+                The example above shows how a client can query for the IPv6 record of host12.example.com.
+                The initial query will give it the last 64 bits (commonly known as the interface ID) of the IPv6 address.
+                It will also get the domain name pointing to the A6 record for the subnet.
+                This query returns an address with a prefix of 48.
+                However, since we have already obtained the last 64 bits we ignore these bits in the second record and only record the new 16 bits.
+                We will then perform a third query and obtain another 16 bits that is added on to the beginning of the address.
+                The fourth query will return the final prefix and allows us to complete the IPv6 address.
+                This record system is more complicated but allows for greater flexibility when creating the zone files by seperating the subnet from the interface id.
+            </p>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="mui-container-fluid">
+        <br>
+        Copyright 2017 Emmanuel Mathi-Amorim
+      </div>
+    </footer>
+  </body>
+</html>

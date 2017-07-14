@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<title>Mail Records</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/css/mui.min.css" integrity="sha256-7dX96C+zjjp+ScpiVFwN+HrZmPIIoz2APe2kODye4i8=" crossorigin="anonymous" />
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/js/mui.min.js" integrity="sha256-H08Ajxx+1IyR13mJBF23G5oZeDiqhtHLAmAoODk4p3k=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="/static/script.js"></script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3761671494959891",
+    enable_page_level_ads: true
+  });
+</script>
+  </head>
+  <body>
+    <div id="sidedrawer" class="mui--no-user-select">
+      <div id="sidedrawer-brand" class="mui--appbar-line-height">
+        <span class="mui--text-title">BrowseDNS.net</span>
+      </div>
+      <div class="mui-divider"></div>
+      <ul>
+        <li>
+          <strong>Record Tools</strong>
+          <ul>
+            <li><a href="/tools/caa/index.html">CAA Record Analyzer</a></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Record Info</strong>
+          <ul>
+            <li><a href="/info/ipaddress.html">IP Address Records</a></li>
+            <li><a href="/info/mail.html">Mail Records</a></li>
+            <li><a href="/info/caa.html">CAA Record Info</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <header id="header">
+      <div class="mui-appbar mui--appbar-line-height">
+        <div class="mui-container-fluid">
+          <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+          <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+          <span class="mui--text-title mui--visible-xs-inline-block mui--visible-sm-inline-block">BrowseDNS.net</span>
+        </div>
+      </div>
+    </header>
+    <div id="content-wrapper">
+		<div class="mui--appbar-height"></div>
+		<div class="mui-container-fluid">
+			<br>
+			<h1 class="text-center">Mail DNS Records</h1>
+			<h2 class="text-center">MX Record [<a href="https://tools.ietf.org/html/rfc1035">RFC1035</a>]</h2>
+			<p>
+				MX records are one of first record types defined are were given type code 15.
+				MX records advertise an mail exchange serving for a certain domain name.
+				Currently this is the only email server record in use as all other records are marked as obsolete.
+				MX records specificy a preference (16bit integer, lower values equal higher preference) and a domain name that will handle the incoming mail.
+				There may be multiple MX records defined.
+			</p>
+			<pre>example.com.   IN  1 mail.example.com.</pre>
+			<h2 class="text-center">Experimental Mailbox Based Email Routing [<a href="https://tools.ietf.org/html/rfc1035">RFC1035</a>]</h2>
+			<p>
+				A competing standard called mailbox records was created as an experimental standard.
+				This standard was never put into use.
+				This standard defined record types MB (TYPE7), MG(TYPE 8), MR(TYPE 9).
+				As well as a query type MAILB (TYPE253).
+				This system used the entire mail address when looking up the destination.
+				The address was converted into a domain name by placing the address part as a single label and then the domain.
+				For instance admin@example.com would be converted into admin.example.com.
+				If the email contained special characters these would be escaped using backslashes.
+				So firstname.lastname@example.com would be firstname\.lastname.example.com.
+			</p>
+			<p>
+				MAILB lookups would result in either a MR record or one or more MG or MB records.
+				An MR record contained a single mailbox domain name that signified that the queried mailbox domain name was an alias for the one returned in the record.
+				An MB record contained a single hostname of a mail server accepting mail for that mailbox. Multiple MB records was allowed.
+				An MG record contained a single mailbox domain name of a mailbox that should receive mail for the mailbox domain name queried.
+				MG records were supposed to signify that the mailbox domain name was in fact a mailing list.
+				Multiple MG records would be returned and the sender would then send a copy of the mail to each of the listed recipients.
+			</p>
+		</div>
+    </div>
+    <footer id="footer">
+      <div class="mui-container-fluid">
+        <br>
+        Copyright 2017 Emmanuel Mathi-Amorim
+      </div>
+    </footer>
+  </body>
+</html>

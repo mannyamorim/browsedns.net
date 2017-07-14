@@ -1,0 +1,154 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<title>DNS CAA Records</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/css/mui.min.css" integrity="sha256-7dX96C+zjjp+ScpiVFwN+HrZmPIIoz2APe2kODye4i8=" crossorigin="anonymous" />
+    <link href="/static/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.17/js/mui.min.js" integrity="sha256-H08Ajxx+1IyR13mJBF23G5oZeDiqhtHLAmAoODk4p3k=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="/static/script.js"></script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3761671494959891",
+    enable_page_level_ads: true
+  });
+</script>
+  </head>
+  <body>
+    <div id="sidedrawer" class="mui--no-user-select">
+      <div id="sidedrawer-brand" class="mui--appbar-line-height">
+        <span class="mui--text-title">BrowseDNS.net</span>
+      </div>
+      <div class="mui-divider"></div>
+      <ul>
+        <li>
+          <strong>Record Tools</strong>
+          <ul>
+            <li><a href="/tools/caa/index.html">CAA Record Analyzer</a></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Record Info</strong>
+          <ul>
+            <li><a href="/info/ipaddress.html">IP Address Records</a></li>
+            <li><a href="/info/mail.html">Mail Records</a></li>
+            <li><a href="/info/caa.html">CAA Record Info</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <header id="header">
+      <div class="mui-appbar mui--appbar-line-height">
+        <div class="mui-container-fluid">
+          <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+          <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+          <span class="mui--text-title mui--visible-xs-inline-block mui--visible-sm-inline-block">BrowseDNS.net</span>
+        </div>
+      </div>
+    </header>
+    <div id="content-wrapper">
+      <div class="mui--appbar-height"></div>
+      <div class="mui-container-fluid">
+        <br>
+        <h1 class="text-center">CAA Record Info</h1>
+            <h2 class="text-center">The Standard</h2>
+            <p>
+                CAA is a standard that lets you control what certificate authorities (CAs) are allowed to issue certificates for your domain.
+                You can use CAA to reduce your exposure to vulnerabilities in certificate authority validation systems and to enforce certificate procurement policies.
+                To use CAA, you publish a set of CAA records in your domain's DNS that list the CAs which you authorize to issue certificates
+                Before issuing a certificate, the CA checks your CAA records and blocks the request if they are not listed.
+            </p>
+            <p>
+                CAA records specify the authorized certificate authorities via a domain name that the CA controls.
+                You can ask your CA to determine the domain that they check against.
+            </p>
+            <h2 class="text-center">The Format</h2>
+            <p>
+                CAA records have a basic format. They contain a flag byte, a tag, and then a value string.
+                Currently the only flag defined is the first bit. This is called the issuer critical flag.
+                If this bit is set the CA checking must understand all tags used in all records in order to issue any certificates.
+                Normally this flag is not set. The tag can currently be one of "issue", "issuewild" or "iodef".
+            </p>
+            <h2 class="text-center">The Issue Tag</h2>
+            <p>
+                The "issue" tag allows you to specify a CA that is allowed to issue certificates for the domain.
+                In the following example, example.com is allowing Let's Encrypt to issue certificates.
+                Multiple issue or issuewild records should be created for each CA that you want to allow issuance for.
+                If multiple domains are specified in one record the CA will be unable to understand and will not issue.
+            </p>
+            <pre>example.com.   IN  CAA 0 issue "letsencrypt.org"</pre>
+            <h2 class="text-center">The IssueWild Tag</h2>
+            <p>
+                The "issuewild" tag allows you to specify a CA that is allowed to issue wildcard certificates for the domain.
+                In the following example, example.com is allowing Let's Encrypt to issue wildcard certificates.
+            </p>
+            <pre>example.com.   IN  CAA 0 issuewild "letsencrypt.org"</pre>
+            <p>
+                When certificates are issued CAA checking is done on each domain present.
+                If the domain is a standard domain (no wildcard), then the CA will look for a CAA record set and will look at the records with the issue tag.
+                If no records with the issue tag are found then the CA will ignore any remaining CAA policy and will succeed in validating that hostname.
+                If records with the issue tag are found then the CA will check to see if one specifies it's domain name in which case it will also succeed in validating the hostname.
+                Once all hostnames are validated the CA will issue the certificate.
+            </p>
+            <p>
+                If the domain name is a wildcard, the the CA will look for records tagged issuewild.
+                These records will allow it to issue a wildcard. If no issuewild records are found it will look for an issue record.
+                This means that the issue records can allow for wildcard issuance if no issuewild records are created.
+            </p>
+            <h2 class="text-center">The Iodef Tag</h2>
+            <p>
+                The "iodef" tag allows you to specify a url that will receive reports when certificates fail the CAA policy.
+                While you can publish these records, there are no known certificate authorities that are currently sending these reports.
+            </p>
+            <pre>example.com.   IN  CAA 0 iodef "mailto:user@example.com"</pre>
+            <h2 class="text-center">Examples</h2>
+            <pre>example.com.   IN  CAA 0 issue ";"</pre>
+            <p>
+                No certificates are to be issued.
+            </p>
+            <pre>example.com.   IN  CAA 0 issue "comodoca.com"</pre>
+            <p>
+                Only Comodo can issue standard and wildcard certificates because no issuewild records are specified.
+                If no issuewild records are specified than checking for wildcard domains falls back to records tagged with issue.
+            </p>
+            <pre>example.com.   IN  CAA 0 issuewild "comodoca.com"</pre>
+            <p>
+                Any CA can issue standard certificates becuase no issue records are specified and Comodo can issue wildcard certificates.
+            </p>
+            <pre>example.com.   IN  CAA 0 issue "comodoca.com"
+example.com.   IN  CAA 0 issuewild ";"</pre>
+            <p>
+                Comodo can issue standard certificates only becuase no domains are specified in the issuewild tag.
+            </p>
+            <pre>example.com.   IN  CAA 0 issue ";"
+example.com.   IN  CAA 0 issuewild "comodoca.com"</pre>
+            <p>
+                Comodo can issue wildcard certificates only becuase no domains are specified in the issue tag.
+                <b class="text-danger">WARNING WHILE THIS CONFIGURATION IS POSSIBLE IT MAY HAVE UNINTENDED EFFECTS.</b>
+                Comodo will be <b>UNABLE</b> to issue a standard wildcard certificate which usually contains the apex and wildcard (example.com, *.example.com).
+            </p>
+            <pre>example.com.   IN  CAA 0 issue "comodoca.com"
+example.com.   IN  CAA 0 issue "letsencrypt.org"
+example.com.   IN  CAA 0 issuewild "comodoca.com"</pre>
+            <p>
+                In this configuration Comodo and Let's Encrypt are allowed to issue standard certificates.
+                Comodo is also allowed to issue wildcard certificates.
+            </p>
+            <h2 class="text-center">Resources</h2>
+            <a href="https://tools.ietf.org/html/rfc6844">Official Standards Document</a><br />
+            <a href="https://ccadb-public.secure.force.com/mozillacommunications/CACommResponsesOnlyReport?CommunicationId=a05o000003WrzBC&QuestionId=Q00023">List of CA domain names</a><br />
+            <a href="https://sslmate.com/labs/caa/">CAA Policy Generator</a>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="mui-container-fluid">
+        <br>
+        Copyright 2017 Emmanuel Mathi-Amorim
+      </div>
+    </footer>
+  </body>
+</html>

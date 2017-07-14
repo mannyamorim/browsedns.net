@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>https://browsedns.net/</loc>
+  <lastmod>2017-07-06T13:35:52+00:00</lastmod>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>https://browsedns.net/tools/caa/index.html</loc>
+  <lastmod>2017-07-05T18:59:35+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://browsedns.net/info/ipaddress.html</loc>
+  <lastmod>2017-07-06T00:27:29+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://browsedns.net/info/mail.html</loc>
+  <lastmod>2017-07-06T13:31:41+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://browsedns.net/info/caa.html</loc>
+  <lastmod>2017-07-05T19:00:20+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+</url>
+</urlset>
