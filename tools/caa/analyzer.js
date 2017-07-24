@@ -11,26 +11,22 @@ function locateCAARecordSet(domain) {
     document.getElementById("imgCheckmarkGreen").style.display = "none";
     document.getElementById("imgCheckmarkOrange").style.display = "none";
     document.getElementById("imgRedX").style.display = "none";
-    const url = 'https://dns.google.com/resolve?name=' + domain + '&type=CAA';
+    const url = 'https://api.browsedns.net/api/v1/caa?name=' + domain;
     fetch(url)
         .then((resp) => resp.json())
         .then(function (data) {
             document.getElementById("imgLoading").style.display = "none";
-            if (data.AD) {
+            if (data.headers.authenticData) {
                 document.getElementById("imgCheckmarkGreen").style.display = "";
             } else {
                 document.getElementById("imgCheckmarkOrange").style.display = "";
             }
 
             var caaRecordsFound = false;
-            if (data.Answer == null) {
+            if (data.records == null || data.records.length == 0) {
                 caaRecordsFound = false;
             } else {
-                data.Answer.map(function (record) {
-                    if (record.type == 257) {
-                        caaRecordsFound = true;
-                    }
-                })
+                caaRecordsFound = true;
             }
 
             if (caaRecordsFound == false) {
@@ -54,12 +50,7 @@ function locateCAARecordSet(domain) {
                     return locateCAARecordSet(fullDomain);
                 }
             } else {
-                var records = [];
-                data.Answer.map(function (record) {
-                    if (record.type == 257) {
-                        records.push(record.data);
-                    }
-                })
+                var records = data.records;
                 displayRecords(records, domain, data);
             }
         })
@@ -74,7 +65,7 @@ function locateCAARecordSet(domain) {
 
 function displayRecords(records, domain, dnsResponse) {
     const recordBlock = document.getElementById('recordsFound');
-    if (dnsResponse.AD) {
+    if (dnsResponse.headers.authenticData) {
         recordBlock.innerHTML = '; Response was validated with DNSSEC\n';
     } else {
         recordBlock.innerHTML = '; Response was NOT validated with DNSSEC\n';
@@ -84,7 +75,7 @@ function displayRecords(records, domain, dnsResponse) {
         displayRecordInfo([], domain);
     } else {
         records.forEach(function (element, index, array) {
-            recordBlock.innerHTML += `${domain} IN  CAA ${element}\n`;
+            recordBlock.innerHTML += `${domain} IN CAA ${element.flags} ${element.tag} "${element.value}"\n`;
         });
         displayRecordInfo(records, domain);
     }
@@ -96,10 +87,9 @@ function displayRecordInfo(records, domain) {
     var iodef = [];
 
     records.forEach(function (element, index, array) {
-        var parts = element.split(' ');
-        var flag = parts.shift();
-        var type = parts.shift();
-        var value = parts.join(' ');
+        var flag = element.flags;
+        var type = element.tag;
+        var value = element.value;
 
         switch (type) {
             case "issue":
@@ -122,14 +112,14 @@ function displayRecordInfo(records, domain) {
 
     if (issuewild.length == 0) {
         issue.forEach(function (element, index, array) {
-            if (element != "\";\"") {
+            if (element != "\\;") {
                 var ca = getCertificateAuthorityName(element.replace(/['"]+/g, ''));
                 both.push(ca);
             }
         });
     } else {
         issue.forEach(function (element, index, array) {
-            if (element != "\";\"") {
+            if (element != "\\;") {
                 var ca = getCertificateAuthorityName(element.replace(/['"]+/g, ''));
                 if (issuewild.indexOf(element) > -1) {
                     both.push(ca);
@@ -139,7 +129,7 @@ function displayRecordInfo(records, domain) {
             }
         });
         issuewild.forEach(function (element, index, array) {
-            if (element != "\";\"") {
+            if (element != "\\;") {
                 var ca = getCertificateAuthorityName(element.replace(/['"]+/g, ''));
                 if (issue.indexOf(element) == -1) {
                     wildcard.push(ca);
